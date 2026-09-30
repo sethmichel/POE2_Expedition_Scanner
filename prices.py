@@ -26,13 +26,23 @@ UNIT_ALIASES = {
 
 # --- Fetching -----------------------------------------------------------------
 
-def fetch_prices(league):
-    """Download every exchange category for a league. Values are in divines."""
+def _session():
     session = requests.Session()
     session.headers["User-Agent"] = USER_AGENT
+    return session
 
-    leagues = session.get(f"{NINJA_API}/leagues", timeout=30).json()
-    league_names = [entry["name"] for entry in leagues]
+
+def fetch_leagues(session=None):
+    """Names of the leagues poe.ninja has prices for."""
+    response = (session or _session()).get(f"{NINJA_API}/leagues", timeout=30)
+    response.raise_for_status()
+    return [entry["name"] for entry in response.json()]
+
+
+def fetch_prices(league):
+    """Download every exchange category for a league. Values are in divines."""
+    session = _session()
+    league_names = fetch_leagues(session)
     if league not in league_names:
         raise ValueError(f"League {league!r} not found. Available: {', '.join(league_names)}")
 
@@ -102,6 +112,19 @@ def _numbers(text):
     return re.findall(r"\d+", text)
 
 
+def parse_amount(amount):
+    """'100 ex' -> (100.0, 'ex'). Units: div, ex, chaos."""
+    match = re.fullmatch(r"\s*([\d.]+)\s*([a-zA-Z]+)\s*", amount)
+    unit = UNIT_ALIASES.get(match.group(2).lower()) if match else None
+    try:
+        value = float(match.group(1)) if unit else None
+    except ValueError:
+        value = None
+    if value is None:
+        raise ValueError(f"can't read price {amount.strip()!r} (use e.g. '100 ex' or '0.5 div')")
+    return value, unit
+
+
 class PriceBook:
     def __init__(self, prices_file, manual_file, fuzzy_cutoff):
         data = json.loads(Path(prices_file).read_text(encoding="utf-8"))
@@ -138,11 +161,7 @@ class PriceBook:
 
     def to_div(self, amount):
         """Parse a price like '100 ex', '0.5 div' or '3 chaos' into divines."""
-        match = re.fullmatch(r"\s*([\d.]+)\s*([a-zA-Z]+)\s*", amount)
-        unit = UNIT_ALIASES.get(match.group(2).lower()) if match else None
-        if not unit:
-            raise ValueError(f"can't read price {amount.strip()!r} (use e.g. '100 ex' or '0.5 div')")
-        value = float(match.group(1))
+        value, unit = parse_amount(amount)
         if unit == "ex":
             return value / self.ex_per_div
         if unit == "chaos":

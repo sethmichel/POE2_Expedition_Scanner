@@ -5,15 +5,20 @@
 
 **how to use it**
 1) Required: only works in windowed, or windowed fullscreen. does not work in fullscreen & you need an ai api key to use
-2) Optionally, you can hit f7 to show the screenshot area, you can adjust the size in the code
-3) Hit f8 to do it
+2) Run `python install_shortcut.py` once. After that, open **PoE2 expedition Price Checker** from the Start Menu like any other app (right-click it → Pin to taskbar if you want)
+3) Optionally, you can hit f7 to show the screenshot area, you can adjust the size in the code
+4) Hit f8 to do it
 
-**configs.py settings**
+**the app window**: update prices, change league, change the minimum price, turn screenshot saving on/off, see which ai model is used, and quit. It also shows a log of what each scan read.
+
+**configs.py settings** (everything, including what the app window doesn't have)
 1) you can change the screenshot area in the code
 2) you can change the minimum price. for example, if everything is under 50 exalt, it'll say nothing is good. you can change this value from 50 to anything
 3) you can change the league you're in
 4) use whatever ai model you want
 5) choose to save or not to save screenshots
+
+Settings changed in the app window are saved to `settings.json` and override `config.py`. Delete `settings.json` to go back to the `config.py` values.
 
 ============================================================================
 
@@ -29,14 +34,20 @@ through, and hides itself after a few seconds.
 
 ```
 pip install -r requirements.txt
-python main.py
+python install_shortcut.py     # adds "PoE2 Price Checker" to the Start Menu
 ```
+
+Then start it from the Start Menu (or `python main.py`). It opens a small
+settings window; closing it or pressing Quit stops the hotkeys. Starting it
+again while it's running just brings the window back.
 
 - Run the game in **Windowed Fullscreen** (exclusive fullscreen blocks overlays).
 - The Claude API key is read from `..\secrets\claude_api_key.txt`.
 - Prices are downloaded once from poe.ninja on first run into `data/prices.json`.
-  Refresh with `python update_prices.py` (or `--league "Other League"`).
-- If the game runs as administrator, this script must too, or the hotkey won't fire.
+  Refresh with the **Update prices** button (or `python update_prices.py`).
+- If the game runs as administrator, this app must too, or the hotkey won't fire.
+- `python install_shortcut.py --desktop` also adds a desktop shortcut;
+  `--remove` deletes them. Re-run it if you move this folder or reinstall Python.
 
 ## Hotkeys
 
@@ -44,13 +55,15 @@ python main.py
 |-----|--------|
 | F8  | Scan the reward list |
 | F7  | Flash a red outline around the scan area |
-| Ctrl+C (console) | Quit |
+
+Quit with the window's Quit button (or Ctrl+C when started from a console).
 
 ## Tuning
 
 All settings are in `config.py`: scan area, monitor, highlight threshold, popup
 position/duration, league, and `SAVE_SCREENSHOTS` (saves every scan to
-`screenshots/`).
+`screenshots/`). League, highlight threshold and screenshot saving changed in
+the app window are stored in `settings.json`, which overrides `config.py`.
 
 To check a scan area against a saved full-monitor screenshot without the game:
 

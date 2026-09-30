@@ -57,6 +57,7 @@ class Overlay:
 
         # Results popup.
         self.popup = tk.Toplevel(root)
+        self.popup.title("Price popup")  # distinct from the main window's title
         self.popup.overrideredirect(True)
         self.popup.attributes("-topmost", True)
         self.popup.attributes("-alpha", opacity)
@@ -68,6 +69,7 @@ class Overlay:
 
         # Scan-area outline (everything but the red border is see-through).
         self.region = tk.Toplevel(root)
+        self.region.title("Scan area")
         self.region.overrideredirect(True)
         self.region.attributes("-topmost", True)
         self.region.attributes("-transparentcolor", TRANSPARENT_KEY)

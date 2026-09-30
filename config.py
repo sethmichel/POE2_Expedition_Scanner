@@ -1,4 +1,9 @@
-"""User settings for the Expedition price checker. Edit freely."""
+"""User settings for the Expedition price checker. Edit freely.
+
+League, minimum price and screenshot saving can also be changed in the app
+window; those changes go to settings.json and override the values here.
+"""
+import json
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -48,3 +53,27 @@ POPUP_SECONDS = 12
 # Clicks pass through the popup to the game.
 POPUP_CLICK_THROUGH = True
 POPUP_OPACITY = 0.93
+
+
+# --- Settings changed in the app window ---
+SETTINGS_FILE = BASE_DIR / "settings.json"
+_WINDOW_SETTINGS = ("LEAGUE", "HIGHLIGHT_THRESHOLD", "SAVE_SCREENSHOTS")
+
+
+def _read_saved():
+    try:
+        data = json.loads(SETTINGS_FILE.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    return {name: value for name, value in data.items() if name in _WINDOW_SETTINGS}
+
+
+def save(**changes):
+    """Apply settings changed in the app window and remember them."""
+    globals().update(changes)
+    saved = _read_saved()
+    saved.update(changes)
+    SETTINGS_FILE.write_text(json.dumps(saved, indent=1, ensure_ascii=False), encoding="utf-8")
+
+
+globals().update(_read_saved())
