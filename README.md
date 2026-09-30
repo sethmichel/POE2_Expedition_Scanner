@@ -4,12 +4,8 @@
 **how does it work**: you run `update_prices.py` once. it uses some api's to build a list of like 400 items current values 1 time. Then, whenever you take a screenshot it sends it to a cheap ai to figure out what it actually says, then it checks the prices in from the list you made. 
 
 **how to use it**
-1) Required:
-  - only works in windowed, or windowed fullscreen. does not work in fullscreen
-  - you need an ai api key to use
-
+1) Required: only works in windowed, or windowed fullscreen. does not work in fullscreen & you need an ai api key to use
 2) Optionally, you can hit f7 to show the screenshot area, you can adjust the size in the code
-
 3) Hit f8 to do it
 
 **configs.py settings**
@@ -19,7 +15,7 @@
 4) use whatever ai model you want
 5) choose to save or not to save screenshots
 
-==========================================================================================
+============================================================================
 
 # PoE2 Expedition Price Checker
 
