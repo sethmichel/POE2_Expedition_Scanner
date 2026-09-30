@@ -1,0 +1,5 @@
+anthropic>=0.102.0
+keyboard>=0.13.5
+pillow>=11.0.0
+pywin32>=308
+requests>=2.32.3

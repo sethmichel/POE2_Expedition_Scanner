@@ -1,0 +1,8 @@
+# Manual prices. These override the downloaded poe.ninja prices.
+# One per line:   Item Name = amount unit      (units: div, ex, chaos)
+# The label before a colon is optional: "Skill: Skyfall" and "Skyfall" both work.
+# Anything after a # is ignored.
+#
+# Examples:
+# Skyfall = 5 ex
+# Support: Healing Runes = 0.2 div
